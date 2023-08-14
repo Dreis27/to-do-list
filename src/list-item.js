@@ -17,3 +17,5 @@ class ListItem {
         this.dueDate=dueDate;
     }
 }
+
+export {ListItem};

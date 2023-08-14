@@ -1,3 +1,5 @@
+import { ListItem } from "./list-item";
+
 class Project {
     constructor(name){
         this.name = name;
@@ -21,7 +23,7 @@ class Project {
         this.tasks = taskArray;
     }
     addTask(newTask){
-        if(this.tasks.find((task)=> TextTrackList.getName()===newTask.getName())) return;
+        if(this.tasks.find((task)=> task.getName()===newTask.getName())) return;
         this.tasks.push(newTask)
     }
 
@@ -29,3 +31,5 @@ class Project {
         this.tasks = this.tasks.filter((task)=> task.getName() !== taskName);
     }
 }
+
+export {Project};
