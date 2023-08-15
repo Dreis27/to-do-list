@@ -18,19 +18,19 @@ header {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.container {
+#container {
     flex-grow: 1;
     display: flex;
 }
 
-.menu-bar {
+#menu-bar {
     background-color: #eaeaea;
     flex-basis: 30%;
     border-right: 1px solid #dcdcdc;
     padding: 20px;
 }
 
-.task-container {
+#task-container {
     flex-grow: 1;
     background-color: #f9f9f9;
     padding: 20px;
@@ -56,5 +56,25 @@ footer {
         width: 100%;
     }
 }
+
+.task-button {
+    display: flex;
+    justify-content: space-between; /* This ensures the name is on the left and the date is on the right */
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.task-name {
+    flex-grow: 1; /* Allows name to take as much space as available */
+    text-align: left;
+}
+
+.task-date {
+    margin-left: 20px; /* Some spacing between name and date */
+    text-align: right;
+}
+
 
 

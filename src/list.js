@@ -30,4 +30,5 @@ class List {
         this.projects = this.projects.filter((project)=> project.getName() !== name);
     }
 }
+export {List};
 
