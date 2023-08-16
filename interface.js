@@ -25,8 +25,9 @@ function createTask(ListItem) {
     btn.appendChild(nameDiv);
     btn.appendChild(dateDiv);
 
+    return btn;
     // Append the button to the task container
-    document.getElementById("task-container").appendChild(btn);
+    // document.getElementById("task-container").appendChild(btn);
 }
 
 function createProject(Project) {
@@ -41,14 +42,56 @@ function createProject(Project) {
     nameDiv.innerText = text;
     btn.appendChild(nameDiv);
 
-    document.getElementById("menu-bar").appendChild(btn);
+    return btn;
+
+    //document.getElementById("menu-bar").appendChild(btn);
 }
 
 function displayProjectTasks(Project) {
+
     let tasks = Project.getTasks();
     const taskContainer = document.getElementById('task-container');
+    taskContainer.innerHTML = '';
+
+    let label = document.createElement('h1');
+    label.innerText = Project.getName();
+
+    taskContainer.appendChild(label);
 
     tasks.forEach((task) => {
-        createTask(task);
+        const button = createTask(task);
+        taskContainer.appendChild(button);
+        button.addEventListener('click', function(task) {
+            Project.deleteTask(task.getName());
+            Project.addTask(task);
+            displayProjectTasks(Project);
+        })
     });
+}
+
+function displayProjects(List) {
+
+    let projects = List.getProjects();
+    const projectContainer = document.getElementById('menu-bar');
+    projectContainer.innerHTML = '';
+
+    for (let i = 0; i<3; i++) {
+        const projectButton = createProject(projects[i]);
+        projectContainer.appendChild(projectButton);
+        projectButton.addEventListener('click', function() {
+            displayProjectTasks(projects[i]);
+        })
+    }
+
+    const label = document.createElement('h1');
+    label.innerText = 'Projects';
+    projectContainer.appendChild(label);
+
+    for (let j = 3; j<projects.length; j++){
+        const projectButton = createProject(projects[j]);
+        projectContainer.appendChild(projectButton);
+        projectButton.addEventListener('click', function() {
+            displayProjectTasks(projects[j]);
+        })
+    }
 }
