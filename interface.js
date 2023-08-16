@@ -99,7 +99,37 @@ function displayProjects(List) {
     }
 }
 
-function addAddTaskButton(){
-    let btn = document.createElement("button");
-    btn.classList.add("add-button");
+function manageAddProjectButton(){
+
+    const modal = document.getElementById("myModal");
+    const btn = document.getElementById("button-add-project");
+    const span = document.getElementsByClassName("close")[0];
+    const addButton = document.getElementById("add");
+    const cancelButton = document.getElementById("cancel");
+
+    // When the user clicks the button, open the modal 
+    btn.onclick = function() {
+    modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+    modal.style.display = "none";
+    }
+
+    // When the user clicks on "Add" button, get the data and close the modal
+    addButton.onclick = function() {
+    const projectName = document.getElementById("projectName").value;
+    const projectDate = document.getElementById("projectDate").value;
+
+    // Do something with projectName and projectDate
+    console.log(projectName, projectDate);
+
+    modal.style.display = "none";
+    }
+
+    // When the user clicks on "Cancel", just close the modal
+    cancelButton.onclick = function() {
+    modal.style.display = "none";
+    }
 }
