@@ -75,6 +75,21 @@ function displayProjects(List) {
     const projectContainer = document.getElementById('project-container');
     projectContainer.innerHTML = '';
 
+    const homeButton = document.getElementById("button-inbox-projects");
+    homeButton.addEventListener('click', function() {
+        displayProjectTasks(projects[0]);
+    })
+
+    const todayButton = document.getElementById("button-today-projects");
+    homeButton.addEventListener('click', function() {
+        displayProjectTasks(projects[1]);
+    })
+
+    const thisWeekButton = document.getElementById("button-week-projects");
+    homeButton.addEventListener('click', function() {
+        displayProjectTasks(projects[2]);
+    })
+
     for (let j = 3; j<projects.length; j++){
         const projectButton = createProject(projects[j]);
         projectContainer.appendChild(projectButton);
