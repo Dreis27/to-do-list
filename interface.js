@@ -72,20 +72,8 @@ function displayProjectTasks(Project) {
 function displayProjects(List) {
 
     let projects = List.getProjects();
-    const projectContainer = document.getElementById('menu-bar');
+    const projectContainer = document.getElementById('project-container');
     projectContainer.innerHTML = '';
-
-    for (let i = 0; i<3; i++) {
-        const projectButton = createProject(projects[i]);
-        projectContainer.appendChild(projectButton);
-        projectButton.addEventListener('click', function() {
-            displayProjectTasks(projects[i]);
-        })
-    }
-
-    const label = document.createElement('h1');
-    label.innerText = 'Projects';
-    projectContainer.appendChild(label);
 
     for (let j = 3; j<projects.length; j++){
         const projectButton = createProject(projects[j]);
@@ -94,4 +82,9 @@ function displayProjects(List) {
             displayProjectTasks(projects[j]);
         })
     }
+}
+
+function addAddTaskButton(){
+    let btn = document.createElement("button");
+    btn.classList.add("add-button");
 }
