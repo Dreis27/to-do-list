@@ -43,3 +43,12 @@ function createProject(Project) {
 
     document.getElementById("menu-bar").appendChild(btn);
 }
+
+function displayProjectTasks(Project) {
+    let tasks = Project.getTasks();
+    const taskContainer = document.getElementById('task-container');
+
+    tasks.forEach((task) => {
+        createTask(task);
+    });
+}
