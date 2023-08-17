@@ -80,7 +80,7 @@ footer {
     text-align: right;
 }
 
-.default-projects{
+.default-projects, #project-container{
     display: flex;
     flex-direction: column;
 }

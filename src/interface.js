@@ -1,6 +1,8 @@
-import { ListItem } from "./src/list-item";
-import { Project } from "./src/project";
-import { List } from "./src/list";
+import { ListItem } from "./list-item";
+import { Project } from "./project";
+import { List } from "./list";
+
+const list = new List();
 
 function createTask(ListItem) {
     // Get name and date from the ListItem object
@@ -75,18 +77,18 @@ function displayProjects(List) {
     const projectContainer = document.getElementById('project-container');
     projectContainer.innerHTML = '';
 
-    const homeButton = document.getElementById("button-inbox-projects");
+    const homeButton = document.getElementById("button-home-projects");
     homeButton.addEventListener('click', function() {
         displayProjectTasks(projects[0]);
     })
 
     const todayButton = document.getElementById("button-today-projects");
-    homeButton.addEventListener('click', function() {
+    todayButton.addEventListener('click', function() {
         displayProjectTasks(projects[1]);
     })
 
     const thisWeekButton = document.getElementById("button-week-projects");
-    homeButton.addEventListener('click', function() {
+    thisWeekButton.addEventListener('click', function() {
         displayProjectTasks(projects[2]);
     })
 
@@ -122,6 +124,10 @@ function manageAddProjectButton(){
     const projectName = document.getElementById("projectName").value;
     const projectDate = document.getElementById("projectDate").value;
 
+    let newProject = new Project(projectName);
+    list.addProject(newProject);
+    displayProjects(list);
+
     // Do something with projectName and projectDate
     console.log(projectName, projectDate);
 
@@ -133,3 +139,4 @@ function manageAddProjectButton(){
     modal.style.display = "none";
     }
 }
+export {createTask, createProject, displayProjectTasks, displayProjects, manageAddProjectButton, list};
