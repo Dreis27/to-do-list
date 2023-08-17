@@ -4,6 +4,14 @@ import { List } from "./list";
 
 const list = new List();
 
+function createAddTaskButton() {
+    const addTaskButton = document.createElement("button");
+    addTaskButton.textContent = "+ Add Task";
+    addTaskButton.classList.add("add-task-button");
+
+    return addTaskButton;
+}
+
 function createTask(ListItem) {
     // Get name and date from the ListItem object
     let text = ListItem.getName();
@@ -69,6 +77,43 @@ function displayProjectTasks(Project) {
             displayProjectTasks(Project);
         })
     });
+
+    const addTaskButton = createAddTaskButton();
+    const modal = document.getElementById("myModal1");
+    const span = document.getElementsByClassName("close1")[0];
+    const addButton = document.getElementById("add1");
+    const cancelButton = document.getElementById("cancel1");
+
+    // When the user clicks the button, open the modal 
+    addTaskButton.onclick = function() {
+    modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+    modal.style.display = "none";
+    }
+
+    addButton.onclick = function() {
+        const taskName = document.getElementById("taskName").value;
+        const taskDate = document.getElementById("taskDate").value;
+    
+        let newTask = new ListItem(taskName,taskDate);
+        Project.addTask(newTask);
+        displayProjectTasks(Project);
+    
+        // Do something with projectName and projectDate
+        console.log(taskName, taskDate);
+    
+        modal.style.display = "none";
+        }
+
+    // When the user clicks on "Cancel", just close the modal
+    cancelButton.onclick = function() {
+    modal.style.display = "none";
+        }
+
+    taskContainer.appendChild(addTaskButton);
 }
 
 function displayProjects(List) {
