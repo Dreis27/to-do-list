@@ -13,20 +13,17 @@ function createAddTaskButton() {
 }
 
 function createTask(ListItem) {
-    // Get name and date from the ListItem object
+
     let text = ListItem.getName();
     let date = ListItem.getDate();
 
-    // Create the button
     let btn = document.createElement("div");
     btn.classList.add("task-button");
 
-    // Create the name div and set its content
     let nameDiv = document.createElement("div");
     nameDiv.classList.add("task-name");
     nameDiv.innerText = text;
 
-    // Create the date div and set its content
     let dateDiv = document.createElement("div");
     const dateBtn = document.createElement('button');
     dateDiv.classList.add("task-date");
@@ -39,13 +36,47 @@ function createTask(ListItem) {
     }
 
     dateDiv.appendChild(dateBtn);
-    // Append the name and date divs to the button
+
     btn.appendChild(nameDiv);
     btn.appendChild(dateDiv);
 
+    let taskDateInput = null;
+    dateBtn.addEventListener('click', function(){
+        if (!taskDateInput) {
+            taskDateInput = document.createElement('input');
+            taskDateInput.type = 'date';
+            taskDateInput.id = 'taskDate';
+
+            // Append the input element to the clicked dateDiv
+            dateDiv.appendChild(taskDateInput);
+            dateBtn.style.display = 'none';
+
+            taskDateInput.addEventListener('input', function(event){
+                taskDateInput.remove();
+                taskDateInput = null;
+                ListItem.setDate(event.target.value);
+                dateBtn.innerHTML = `${ListItem.getDate()}` || 'No date';
+                dateBtn.style.display = 'inline-block';
+            });
+
+            // Add a click event to the document to handle cancellation
+            document.addEventListener('click', function(event) {
+                
+                    // Check if the clicked element is the date input or date button
+                    if (event.target !== taskDateInput && !event.target.classList.contains('dateBtn')) {
+                        
+                        // Remove the input element and remove the click event listener
+                        if (taskDateInput) {
+                            taskDateInput.remove();
+                            taskDateInput = null;
+                            dateBtn.style.display = 'inline-block';
+                        }
+                    }
+            });
+        }
+    })
+
     return btn;
-    // Append the button to the task container
-    // document.getElementById("task-container").appendChild(btn);
 }
 
 function createProject(Project) {
@@ -61,8 +92,6 @@ function createProject(Project) {
     btn.appendChild(nameDiv);
 
     return btn;
-
-    //document.getElementById("menu-bar").appendChild(btn);
 }
 
 function displayProjectTasks(Project) {
@@ -82,15 +111,18 @@ function displayProjectTasks(Project) {
     const addButton = document.getElementById("add1");
     const cancelButton = document.getElementById("cancel1");
 
-    // When the user clicks the button, open the modal 
     addTaskButton.onclick = function() {
     modal.style.display = "block";
     }
 
-    // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
     modal.style.display = "none";
     }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }}
 
     addButton.onclick = function() {
         const taskName = document.getElementById("taskName").value;
@@ -98,28 +130,19 @@ function displayProjectTasks(Project) {
 
         if (taskName.trim() === "") {
             alert("Task name is required.");
-            return; // Do not close the modal if input is empty
+            return;
           }
     
         let newTask = new ListItem(taskName,taskDate);
         Project.addTask(newTask);
         displayProjectTasks(Project);
     
-        // Do something with projectName and projectDate
-        console.log(taskName, taskDate);
-    
         modal.style.display = "none";
         }
 
-    // When the user clicks on "Cancel", just close the modal
     cancelButton.onclick = function() {
     modal.style.display = "none";
         }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }}
 
     taskContainer.appendChild(addTaskButton);
 
@@ -128,45 +151,6 @@ function displayProjectTasks(Project) {
         taskContainer.appendChild(button);
 
     });
-    let dateDivs = document.getElementsByClassName('task-date');
-    let dateBtns = document.getElementsByClassName('dateBtn');
-    let taskDateInput = null;
-
-    if(dateBtns){
-        for (let i = 0; i < dateBtns.length; i++){
-        dateBtns[i].addEventListener('click', function(){
-            if (!taskDateInput) {
-                taskDateInput = document.createElement('input');
-                taskDateInput.type = 'date';
-                taskDateInput.id = 'taskDate';
-
-                // Append the input element to the clicked dateDiv
-                dateDivs[i].appendChild(taskDateInput);
-                dateBtns[i].style.display = 'none';
-
-                taskDateInput.addEventListener('input', function(event){
-                    Project.getTasks()[i].setDate(event.target.value);
-                    displayProjectTasks(Project);
-                    dateBtns[i].style.display = 'inline-block';
-                });
-
-                // Add a click event to the document to handle cancellation
-                document.addEventListener('click', function(event) {
-                    
-                        // Check if the clicked element is the date input or date button
-                        if (event.target !== taskDateInput && !event.target.classList.contains('dateBtn')) {
-                            dateBtns[i].style.display = 'inline-block';
-                            // Remove the input element and remove the click event listener
-                            if (taskDateInput) {
-                                taskDateInput.remove();
-                                taskDateInput = null;
-
-                            }
-                        }
-                });
-            }
-        });
-    }}
 }
 
 function displayProjects(List) {
@@ -208,23 +192,28 @@ function manageAddProjectButton(){
     const addButton = document.getElementById("add");
     const cancelButton = document.getElementById("cancel");
 
-    // When the user clicks the button, open the modal 
     btn.onclick = function() {
     modal.style.display = "block";
     }
 
-    // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
     modal.style.display = "none";
     }
+    span.addEventListener('click', function() {
+        modal.style.display = "none";
+        })
 
-    // When the user clicks on "Add" button, get the data and close the modal
+    window.onclick = function(event) {
+        if (event.target == modal) {
+        modal.style.display = "none";
+        }}
+
     addButton.onclick = function() {
     const projectName = document.getElementById("projectName").value;
 
     if (projectName.trim() === "") {
         alert("Project name is required.");
-        return; // Do not close the modal if input is empty
+        return;
       }
 
     let newProject = new Project(projectName);
@@ -234,14 +223,8 @@ function manageAddProjectButton(){
     modal.style.display = "none";
     }
 
-    // When the user clicks on "Cancel", just close the modal
     cancelButton.onclick = function() {
     modal.style.display = "none";
     }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-          modal.style.display = "none";
-        }}
 }
-export {createTask, createProject, displayProjectTasks, displayProjects, manageAddProjectButton, list};
+export {displayProjectTasks, displayProjects, manageAddProjectButton, list};

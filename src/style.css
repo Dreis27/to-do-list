@@ -1,3 +1,7 @@
+:root {
+  --main-color: #c5e8ff;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -72,6 +76,8 @@ footer {
     padding: 10px;
     border: 1px solid #ccc;
     margin-bottom: 10px;
+    align-items: center;
+    border-radius: 5px;
 }
 
 .task-name {
@@ -80,8 +86,18 @@ footer {
 }
 
 .task-date {
-    margin-left: 20px; /* Some spacing between name and date */
-    text-align: right;
+  box-sizing: border-box;
+  padding: 5px;
+  margin-left: 20px; /* Some spacing between name and date */
+  text-align: right;
+  border-radius: 4px;
+}
+.task-date:hover{
+  background-color: var(--main-color);
+}
+.dateBtn{
+  background-color: transparent;
+  border: none;
 }
 
 .default-projects, #project-container{
@@ -105,11 +121,11 @@ footer {
   }
   
   .button-default-project:hover, .project-button:hover {
-    background: #b8dbff;
+    background: var(--main-color);
     text-decoration: none;
   }
 
-  .button-add-project{
+  .button-add-project, .add-task-button{
     background-color: transparent;
     box-sizing: border-box;
     margin-top: 10px;
@@ -117,9 +133,15 @@ footer {
     font-family: Arial;
     border: none;
     font-size: 16px;
+    padding:15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
   }
-  .button-add-project:hover {
-    background: #b8dbff;
+  .add-task-button{
+    font-size: 20px;
+  }
+  .button-add-project:hover, .add-task-button:hover {
+    background: var(--main-color);
     text-decoration: none;
 
   }
@@ -127,24 +149,31 @@ footer {
   h1{
     margin-left: 20px;
   }
+
 .modal, .modal1 {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
   }
   
   .modal-content, .modal-content1 {
     background-color: #fefefe;
     margin: 15% auto;
     padding: 20px;
-    border: 1px solid #888;
-    width: 30%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    width: 70%;
+    max-width: 400px;
+  }
+
+  .modal-header, .modal-header1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   
   .close, .close1 {
@@ -160,6 +189,50 @@ footer {
     cursor: pointer;
   }
   
+  .modal-body, .modal-body1 {
+    margin-top: 10px;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr;
+    margin-bottom: 10px;
+  }
+  
+  .modal-body label, .modal-body1 label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .modal-body input, .modal-body1 input {
+    width: 90%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 20px;
+  }
+  
+  .modal-footer, .modal-footer1 {
+    margin-top: 15px;
+    text-align: right;
+  }
+  
+  .modal-footer button, .modal-footer1 button {
+    padding: 8px 20px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  #add, #add1 {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  #cancel, #cancel1 {
+    background-color: #ccc;
+    color: black;
+  }
 
 
 
