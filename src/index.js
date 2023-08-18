@@ -6,5 +6,6 @@ import { createTask, createProject, displayProjectTasks, displayProjects, manage
 
     console.log("Window is loaded!");
     displayProjects(list);
+    displayProjectTasks(list.getProjects()[0]); 
     manageAddProjectButton();
 

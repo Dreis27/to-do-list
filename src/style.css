@@ -27,17 +27,20 @@ header {
     display: flex;
     flex-direction: column;
     background-color: #eaeaea;
-    flex-basis: 30%;
+    flex-basis: 20%;
     border-right: 1px solid #dcdcdc;
     padding: 20px;
 }
 
 #task-container {
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
     background-color: #f9f9f9;
-    padding: 20px;
+    padding-top: 20px;
+    padding-left: min(300px, 15%);
+    padding-right: min(300px, 15%);
 }
 
 footer {
@@ -49,12 +52,12 @@ footer {
     height: 5vh;
 }
 
-@media screen and (max-width: 768px) {
-    .container {
+@media screen and (max-width: 600px) {
+    #container {
         flex-direction: column;
     }
 
-    .menu-bar, .task-container {
+    #menu-bar, #task-container {
         flex-basis: auto;
         flex-grow: 1;
         width: 100%;
@@ -81,10 +84,48 @@ footer {
 }
 
 .default-projects, #project-container{
+    margin-top: 10px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
 }
 
+.button-default-project, .project-button {
+    box-sizing: border-box;
+    margin-top: 10px;
+    text-align: left;
+    font-family: Arial;
+    color: #353434;
+    font-size: 20px;
+    background: transparent;
+    padding: 10px 20px 10px 20px;
+    border: none;
+    text-decoration: none;
+  }
+  
+  .button-default-project:hover, .project-button:hover {
+    background: #b8dbff;
+    text-decoration: none;
+  }
+
+  .button-add-project{
+    background-color: transparent;
+    box-sizing: border-box;
+    margin-top: 10px;
+    color: #353434;
+    font-family: Arial;
+    border: none;
+    font-size: 16px;
+  }
+  .button-add-project:hover {
+    background: #b8dbff;
+    text-decoration: none;
+
+  }
+
+  h1{
+    margin-left: 20px;
+  }
 .modal, .modal1 {
     display: none;
     position: fixed;

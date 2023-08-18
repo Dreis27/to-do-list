@@ -68,16 +68,6 @@ function displayProjectTasks(Project) {
 
     taskContainer.appendChild(label);
 
-    tasks.forEach((task) => {
-        const button = createTask(task);
-        taskContainer.appendChild(button);
-        button.addEventListener('click', function(task) {
-            Project.deleteTask(task.getName());
-            Project.addTask(task);
-            displayProjectTasks(Project);
-        })
-    });
-
     const addTaskButton = createAddTaskButton();
     const modal = document.getElementById("myModal1");
     const span = document.getElementsByClassName("close1")[0];
@@ -113,7 +103,22 @@ function displayProjectTasks(Project) {
     modal.style.display = "none";
         }
 
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }}
+
     taskContainer.appendChild(addTaskButton);
+
+    tasks.forEach((task) => {
+        const button = createTask(task);
+        taskContainer.appendChild(button);
+        button.addEventListener('click', function(task) {
+            Project.deleteTask(task.getName());
+            Project.addTask(task);
+            displayProjectTasks(Project);
+        })
+    });
 }
 
 function displayProjects(List) {
@@ -140,6 +145,7 @@ function displayProjects(List) {
     for (let j = 3; j<projects.length; j++){
         const projectButton = createProject(projects[j]);
         projectContainer.appendChild(projectButton);
+        projectButton.classList.add('project-button');
         projectButton.addEventListener('click', function() {
             displayProjectTasks(projects[j]);
         })
@@ -183,5 +189,10 @@ function manageAddProjectButton(){
     cancelButton.onclick = function() {
     modal.style.display = "none";
     }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }}
 }
 export {createTask, createProject, displayProjectTasks, displayProjects, manageAddProjectButton, list};
