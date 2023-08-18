@@ -30,6 +30,7 @@ header {
     flex-basis: 20%;
     border-right: 1px solid #dcdcdc;
     padding: 20px;
+    overflow: scroll;
 }
 
 #task-container {

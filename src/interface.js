@@ -18,7 +18,7 @@ function createTask(ListItem) {
     let date = ListItem.getDate();
 
     // Create the button
-    let btn = document.createElement("button");
+    let btn = document.createElement("div");
     btn.classList.add("task-button");
 
     // Create the name div and set its content
@@ -28,9 +28,17 @@ function createTask(ListItem) {
 
     // Create the date div and set its content
     let dateDiv = document.createElement("div");
+    const dateBtn = document.createElement('button');
     dateDiv.classList.add("task-date");
-    dateDiv.innerText = date;
+    dateBtn.classList.add('dateBtn');
+ 
+    if(!date){
+        dateBtn.innerHTML = "No date";
+    } else {
+        dateBtn.innerHTML = `${date}`;
+    }
 
+    dateDiv.appendChild(dateBtn);
     // Append the name and date divs to the button
     btn.appendChild(nameDiv);
     btn.appendChild(dateDiv);
@@ -87,6 +95,11 @@ function displayProjectTasks(Project) {
     addButton.onclick = function() {
         const taskName = document.getElementById("taskName").value;
         const taskDate = document.getElementById("taskDate").value;
+
+        if (taskName.trim() === "") {
+            alert("Task name is required.");
+            return; // Do not close the modal if input is empty
+          }
     
         let newTask = new ListItem(taskName,taskDate);
         Project.addTask(newTask);
@@ -113,12 +126,47 @@ function displayProjectTasks(Project) {
     tasks.forEach((task) => {
         const button = createTask(task);
         taskContainer.appendChild(button);
-        button.addEventListener('click', function(task) {
-            Project.deleteTask(task.getName());
-            Project.addTask(task);
-            displayProjectTasks(Project);
-        })
+
     });
+    let dateDivs = document.getElementsByClassName('task-date');
+    let dateBtns = document.getElementsByClassName('dateBtn');
+    let taskDateInput = null;
+
+    if(dateBtns){
+        for (let i = 0; i < dateBtns.length; i++){
+        dateBtns[i].addEventListener('click', function(){
+            if (!taskDateInput) {
+                taskDateInput = document.createElement('input');
+                taskDateInput.type = 'date';
+                taskDateInput.id = 'taskDate';
+
+                // Append the input element to the clicked dateDiv
+                dateDivs[i].appendChild(taskDateInput);
+                dateBtns[i].style.display = 'none';
+
+                taskDateInput.addEventListener('input', function(event){
+                    Project.getTasks()[i].setDate(event.target.value);
+                    displayProjectTasks(Project);
+                    dateBtns[i].style.display = 'inline-block';
+                });
+
+                // Add a click event to the document to handle cancellation
+                document.addEventListener('click', function(event) {
+                    
+                        // Check if the clicked element is the date input or date button
+                        if (event.target !== taskDateInput && !event.target.classList.contains('dateBtn')) {
+                            dateBtns[i].style.display = 'inline-block';
+                            // Remove the input element and remove the click event listener
+                            if (taskDateInput) {
+                                taskDateInput.remove();
+                                taskDateInput = null;
+
+                            }
+                        }
+                });
+            }
+        });
+    }}
 }
 
 function displayProjects(List) {
@@ -173,14 +221,15 @@ function manageAddProjectButton(){
     // When the user clicks on "Add" button, get the data and close the modal
     addButton.onclick = function() {
     const projectName = document.getElementById("projectName").value;
-    const projectDate = document.getElementById("projectDate").value;
+
+    if (projectName.trim() === "") {
+        alert("Project name is required.");
+        return; // Do not close the modal if input is empty
+      }
 
     let newProject = new Project(projectName);
     list.addProject(newProject);
     displayProjects(list);
-
-    // Do something with projectName and projectDate
-    console.log(projectName, projectDate);
 
     modal.style.display = "none";
     }
