@@ -28,7 +28,7 @@ class Project {
     }
 
     deleteTask(taskName){
-        this.tasks = this.tasks.filter((task)=> task.getName() !== taskName);
+        this.tasks = this.tasks.filter((task)=> task.name !== taskName);
     }
 }
 

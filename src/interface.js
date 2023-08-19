@@ -1,7 +1,7 @@
 import { ListItem } from "./list-item";
 import { Project } from "./project";
 import { List } from "./list";
-import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate } from "./storage";
+import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate, deleteSavedTask } from "./storage";
 
 const today = new Date();
 const year = today.getFullYear();
@@ -32,7 +32,8 @@ function createAddTaskButton() {
 function createTask(ListItem, projectName) {
 
     let text = ListItem.getName();
-    let date = ListItem.getDate();
+    let date = getToDoList().getProject(projectName).getTask(text).getDate();
+
 
     let btn = document.createElement("div");
     btn.classList.add("task-button");
@@ -41,8 +42,23 @@ function createTask(ListItem, projectName) {
     nameDiv.classList.add("task-name");
     nameDiv.innerText = text;
 
+    const span = document.createElement('span');
+    span.classList.add('close');
+    span.innerHTML = '&times;';
+
+    span.addEventListener('click', function(){
+        deleteSavedTask(projectName, text);
+        deleteSavedTask('Today', text);
+        deleteSavedTask('This Week', text);
+        displayProjectTasks(projectName);
+    })
+
     let dateDiv = document.createElement("div");
     const dateBtn = document.createElement('button');
+    if (projectName=='Today' || projectName=='This Week'){
+        dateBtn.disabled = true;
+    }
+    
     dateDiv.classList.add("task-date");
     dateBtn.classList.add('dateBtn');
  
@@ -59,9 +75,10 @@ function createTask(ListItem, projectName) {
     }
 
     dateDiv.appendChild(dateBtn);
-
+    
     btn.appendChild(nameDiv);
     btn.appendChild(dateDiv);
+    btn.appendChild(span);
 
     let taskDateInput = null;
     dateBtn.addEventListener('click', function(){
@@ -81,11 +98,15 @@ function createTask(ListItem, projectName) {
                 let newDate = getToDoList().getProject(projectName).getTask(text).getDate();
                 dateBtn.innerHTML = `${newDate}` || 'No date';
 
-                if(newDate==formattedToday){
-                    addSavedTask('Today', ListItem);
+                if(newDate==formattedToday){ // here must also check whether project already contains the task!!!!!!!!!!!!!!!!!!!!
+                    addSavedTask('Today', getToDoList().getProject(projectName).getTask(text));
+                } else {
+                    deleteSavedTask('Today', getToDoList().getProject(projectName).getTask(text));
                 }
                 if(isDateInThisWeek(newDate)){
-                    addSavedTask('This Week', ListItem);
+                    addSavedTask('This Week', getToDoList().getProject(projectName).getTask(text));
+                } else {
+                    deleteSavedTask('This Week', getToDoList().getProject(projectName).getTask(text));
                 }
                 dateBtn.style.display = 'inline-block';
             });
@@ -190,12 +211,6 @@ function displayProjectTasks(projectName) {
         taskContainer.appendChild(button);
 
     });
-    const dateBtns = document.getElementsByClassName('dateBtn');
-    if (projectName=='Today' || projectName=='This Week'){
-        for(let i=0; i<dateBtns.length; i++){
-            dateBtns[i].dsabled =true;
-        }
-    } 
 }
 
 function displayProjects() {
