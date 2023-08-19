@@ -101,12 +101,12 @@ function createTask(ListItem, projectName) {
                 if(newDate==formattedToday){ // here must also check whether project already contains the task!!!!!!!!!!!!!!!!!!!!
                     addSavedTask('Today', getToDoList().getProject(projectName).getTask(text));
                 } else {
-                    deleteSavedTask('Today', getToDoList().getProject(projectName).getTask(text));
+                    deleteSavedTask('Today', text);
                 }
                 if(isDateInThisWeek(newDate)){
                     addSavedTask('This Week', getToDoList().getProject(projectName).getTask(text));
                 } else {
-                    deleteSavedTask('This Week', getToDoList().getProject(projectName).getTask(text));
+                    deleteSavedTask('This Week', text);
                 }
                 dateBtn.style.display = 'inline-block';
             });
