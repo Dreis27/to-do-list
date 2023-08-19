@@ -1,8 +1,8 @@
 import { ListItem } from "./list-item";
 import { Project } from "./project";
 import { List } from "./list";
+import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate } from "./storage";
 
-const list = new List();
 const today = new Date();
 const year = today.getFullYear();
 const month = today.getMonth() + 1; // Months are 0-indexed, so add 1
@@ -29,7 +29,7 @@ function createAddTaskButton() {
     return addTaskButton;
 }
 
-function createTask(ListItem) {
+function createTask(ListItem, projectName) {
 
     let text = ListItem.getName();
     let date = ListItem.getDate();
@@ -51,10 +51,10 @@ function createTask(ListItem) {
     } else {
         dateBtn.innerHTML = `${date}`;
         if(date==formattedToday){
-            list.getProject('Today').addTask(ListItem);
+            addSavedTask('Today', ListItem);
         }
         if(isDateInThisWeek(date)){
-            list.getProject('This Week').addTask(ListItem);
+            addSavedTask('This Week', ListItem);
         }
     }
 
@@ -77,13 +77,15 @@ function createTask(ListItem) {
             taskDateInput.addEventListener('change', function(event){
                 taskDateInput.remove();
                 taskDateInput = null;
-                ListItem.setDate(event.target.value);
-                dateBtn.innerHTML = `${ListItem.getDate()}` || 'No date';
-                if(ListItem.getDate()==formattedToday){
-                    list.getProject('Today').addTask(ListItem);
+                setSavedTaskDate(projectName, text, event.target.value);
+                let newDate = getToDoList().getProject(projectName).getTask(text).getDate();
+                dateBtn.innerHTML = `${newDate}` || 'No date';
+
+                if(newDate==formattedToday){
+                    addSavedTask('Today', ListItem);
                 }
-                if(isDateInThisWeek(ListItem.getDate())){
-                    list.getProject('This Week').addTask(ListItem);
+                if(isDateInThisWeek(newDate)){
+                    addSavedTask('This Week', ListItem);
                 }
                 dateBtn.style.display = 'inline-block';
             });
@@ -108,107 +110,121 @@ function createTask(ListItem) {
     return btn;
 }
 
-function createProject(Project) {
-
-    let text = Project.getName();
+function createProject(projectName) {
 
     let btn = document.createElement("button");
     btn.classList.add("project-button");
 
     let nameDiv = document.createElement("div");
     nameDiv.classList.add("project-name");
-    nameDiv.innerText = text;
+    nameDiv.innerText = projectName;
     btn.appendChild(nameDiv);
 
     return btn;
 }
 
-function displayProjectTasks(Project) {
+function displayProjectTasks(projectName) {
 
-    let tasks = Project.getTasks();
+    const project = getToDoList().getProject(projectName)
+    const tasks = project.getTasks();
     const taskContainer = document.getElementById('task-container');
     taskContainer.innerHTML = '';
 
     let label = document.createElement('h1');
-    label.innerText = Project.getName();
+    label.setAttribute("id", "projectLabel");
+    label.innerText = projectName;
 
     taskContainer.appendChild(label);
 
     const addTaskButton = createAddTaskButton();
-    const modal = document.getElementById("myModal1");
-    const span = document.getElementsByClassName("close1")[0];
-    const addButton = document.getElementById("add1");
-    const cancelButton = document.getElementById("cancel1");
 
-    addTaskButton.onclick = function() {
-    modal.style.display = "block";
-    }
-
-    span.onclick = function() {
-    modal.style.display = "none";
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-          modal.style.display = "none";
-        }}
-
-    addButton.onclick = function() {
-        const taskName = document.getElementById("taskName").value;
-        const taskDate = document.getElementById("taskDate").value;
-
-        if (taskName.trim() === "") {
-            alert("Task name is required.");
-            return;
-          }
+    if (projectName=='Today' || projectName=='This Week'){
+        addTaskButton.style.display = 'none';
+    } else {
+        addTaskButton.style.display = 'inline-block';
     
-        let newTask = new ListItem(taskName,taskDate);
-        Project.addTask(newTask);
-        displayProjectTasks(Project);
-    
+        const modal = document.getElementById("myModal1");
+        const span = document.getElementsByClassName("close1")[0];
+        const addButton = document.getElementById("add1");
+        const cancelButton = document.getElementById("cancel1");
+
+        addTaskButton.onclick = function() {
+        modal.style.display = "block";
+        }
+
+        span.onclick = function() {
         modal.style.display = "none";
         }
 
-    cancelButton.onclick = function() {
-    modal.style.display = "none";
-        }
+        window.onclick = function(event) {
+            if (event.target == modal) {
+            modal.style.display = "none";
+            }}
 
-    taskContainer.appendChild(addTaskButton);
+        addButton.onclick = function() {
+            const taskName = document.getElementById("taskName").value;
+            const taskDate = document.getElementById("taskDate").value;
+
+            if (taskName.trim() === "") {
+                alert("Task name is required.");
+                return;
+            }
+        
+            let newTask = new ListItem(taskName,taskDate);
+            
+            addSavedTask(projectName, newTask);
+            displayProjectTasks(projectName);
+        
+            modal.style.display = "none";
+            }
+
+        cancelButton.onclick = function() {
+        modal.style.display = "none";
+            }
+
+        taskContainer.appendChild(addTaskButton);
+    }
 
     tasks.forEach((task) => {
-        const button = createTask(task);
+        const button = createTask(task, projectName);
         taskContainer.appendChild(button);
 
     });
+    const dateBtns = document.getElementsByClassName('dateBtn');
+    if (projectName=='Today' || projectName=='This Week'){
+        for(let i=0; i<dateBtns.length; i++){
+            dateBtns[i].dsabled =true;
+        }
+    } 
 }
 
-function displayProjects(List) {
+function displayProjects() {
 
-    let projects = List.getProjects();
+    let projects = getToDoList().getProjects();
     const projectContainer = document.getElementById('project-container');
     projectContainer.innerHTML = '';
 
     const homeButton = document.getElementById("button-home-projects");
     homeButton.addEventListener('click', function() {
-        displayProjectTasks(projects[0]);
+        displayProjectTasks('Home');
     })
 
     const todayButton = document.getElementById("button-today-projects");
     todayButton.addEventListener('click', function() {
-        displayProjectTasks(projects[1]);
+        displayProjectTasks('Today');
     })
 
     const thisWeekButton = document.getElementById("button-week-projects");
     thisWeekButton.addEventListener('click', function() {
-        displayProjectTasks(projects[2]);
+        displayProjectTasks('This Week');
     })
 
     for (let j = 3; j<projects.length; j++){
-        const projectButton = createProject(projects[j]);
+        const projectButton = createProject(projects[j].getName());
         projectContainer.appendChild(projectButton);
         projectButton.classList.add('project-button');
         projectButton.addEventListener('click', function() {
-            displayProjectTasks(projects[j]);
+            displayProjectTasks(projects[j].getName());
         })
     }
 }
@@ -246,8 +262,8 @@ function manageAddProjectButton(){
       }
 
     let newProject = new Project(projectName);
-    list.addProject(newProject);
-    displayProjects(list);
+    addSavedProject(newProject);
+    displayProjects();
 
     modal.style.display = "none";
     }
@@ -256,4 +272,4 @@ function manageAddProjectButton(){
     modal.style.display = "none";
     }
 }
-export {displayProjectTasks, displayProjects, manageAddProjectButton, list};
+export {displayProjectTasks, displayProjects, manageAddProjectButton};
