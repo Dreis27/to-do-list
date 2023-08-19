@@ -3,6 +3,23 @@ import { Project } from "./project";
 import { List } from "./list";
 
 const list = new List();
+const today = new Date();
+const year = today.getFullYear();
+const month = today.getMonth() + 1; // Months are 0-indexed, so add 1
+const day = today.getDate();
+
+const formattedToday = `${year}-0${month}-${day}`;
+
+function isDateInThisWeek(date) {
+    const [givenYear, givenMonth, givenDay] = date.split('-').map(Number);
+ 
+    const firstDayOfWeek = new Date(year, month -1, day - today.getDay()+1);
+    const lastDayOfWeek = new Date(year, month -1, day + (7 - today.getDay()));
+
+    const inputDate = new Date(givenYear, givenMonth - 1, givenDay);
+
+    return inputDate >= firstDayOfWeek && inputDate <= lastDayOfWeek;
+  }
 
 function createAddTaskButton() {
     const addTaskButton = document.createElement("button");
@@ -33,6 +50,12 @@ function createTask(ListItem) {
         dateBtn.innerHTML = "No date";
     } else {
         dateBtn.innerHTML = `${date}`;
+        if(date==formattedToday){
+            list.getProject('Today').addTask(ListItem);
+        }
+        if(isDateInThisWeek(date)){
+            list.getProject('This Week').addTask(ListItem);
+        }
     }
 
     dateDiv.appendChild(dateBtn);
@@ -51,11 +74,17 @@ function createTask(ListItem) {
             dateDiv.appendChild(taskDateInput);
             dateBtn.style.display = 'none';
 
-            taskDateInput.addEventListener('input', function(event){
+            taskDateInput.addEventListener('change', function(event){
                 taskDateInput.remove();
                 taskDateInput = null;
                 ListItem.setDate(event.target.value);
                 dateBtn.innerHTML = `${ListItem.getDate()}` || 'No date';
+                if(ListItem.getDate()==formattedToday){
+                    list.getProject('Today').addTask(ListItem);
+                }
+                if(isDateInThisWeek(ListItem.getDate())){
+                    list.getProject('This Week').addTask(ListItem);
+                }
                 dateBtn.style.display = 'inline-block';
             });
 
