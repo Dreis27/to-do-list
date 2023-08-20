@@ -1,7 +1,7 @@
 import { ListItem } from "./list-item";
 import { Project } from "./project";
 import { List } from "./list";
-import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate, deleteSavedTask } from "./storage";
+import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate, deleteSavedTask, deleteSavedProject } from "./storage";
 
 const today = new Date();
 const year = today.getFullYear();
@@ -12,9 +12,14 @@ const formattedToday = `${year}-0${month}-${day}`;
 
 function isDateInThisWeek(date) {
     const [givenYear, givenMonth, givenDay] = date.split('-').map(Number);
+
+      // Calculate the day of the week where Monday is 0 and Sunday is 6
+    const todayDayOfWeek = (today.getDay() + 6) % 7;
  
-    const firstDayOfWeek = new Date(year, month -1, day - today.getDay()+1);
-    const lastDayOfWeek = new Date(year, month -1, day + (7 - today.getDay()));
+    const firstDayOfWeek = new Date(year, month - 1, day - todayDayOfWeek + 1);
+
+    // Calculate the last day of the week (Sunday)
+    const lastDayOfWeek = new Date(year, month - 1, day + (6 - todayDayOfWeek));
 
     const inputDate = new Date(givenYear, givenMonth - 1, givenDay);
 
@@ -99,11 +104,14 @@ function createTask(ListItem, projectName) {
                 dateBtn.innerHTML = `${newDate}` || 'No date';
 
                 if(newDate==formattedToday){ // here must also check whether project already contains the task!!!!!!!!!!!!!!!!!!!!
+                    deleteSavedTask('Today', text);
                     addSavedTask('Today', getToDoList().getProject(projectName).getTask(text));
                 } else {
                     deleteSavedTask('Today', text);
                 }
                 if(isDateInThisWeek(newDate)){
+                    console.log('ye');
+                    deleteSavedTask('This Week', text);
                     addSavedTask('This Week', getToDoList().getProject(projectName).getTask(text));
                 } else {
                     deleteSavedTask('This Week', text);
@@ -136,10 +144,32 @@ function createProject(projectName) {
     let btn = document.createElement("button");
     btn.classList.add("project-button");
 
+    btn.innerHTML = '<i class="fas fa-project-diagram"></i>';
+
+    const span = document.createElement('span');
+    span.classList.add('close');
+    span.classList.add('left');
+    span.innerHTML = '&times;';
+
+    span.addEventListener('click', function(){
+        const array = getToDoList().getProject(projectName).getTasks();
+        for(let i = 0; i < array.length; i++) {
+            if(getToDoList().getProject('Today').contains(array[i].getName())){
+                deleteSavedTask('Today', array[i].getName());
+            }
+            if(getToDoList().getProject('This Week').contains(array[i].getName())){
+                deleteSavedTask('This Week', array[i].getName());
+            }
+        }
+        deleteSavedProject(projectName);
+        displayProjects();
+    })
+
     let nameDiv = document.createElement("div");
     nameDiv.classList.add("project-name");
     nameDiv.innerText = projectName;
     btn.appendChild(nameDiv);
+    btn.appendChild(span);
 
     return btn;
 }
@@ -147,100 +177,106 @@ function createProject(projectName) {
 function displayProjectTasks(projectName) {
 
     const project = getToDoList().getProject(projectName)
-    const tasks = project.getTasks();
     const taskContainer = document.getElementById('task-container');
-    taskContainer.innerHTML = '';
-
-    let label = document.createElement('h1');
-    label.setAttribute("id", "projectLabel");
-    label.innerText = projectName;
-
-    taskContainer.appendChild(label);
-
-    const addTaskButton = createAddTaskButton();
-
-    if (projectName=='Today' || projectName=='This Week'){
-        addTaskButton.style.display = 'none';
+    if(project== undefined){
+        taskContainer.innerHTML = '';
     } else {
-        addTaskButton.style.display = 'inline-block';
-    
-        const modal = document.getElementById("myModal1");
-        const span = document.getElementsByClassName("close1")[0];
-        const addButton = document.getElementById("add1");
-        const cancelButton = document.getElementById("cancel1");
+        const tasks = project.getTasks();
 
-        addTaskButton.onclick = function() {
-        modal.style.display = "block";
-        }
+        taskContainer.innerHTML = '';
 
-        span.onclick = function() {
-        modal.style.display = "none";
-        }
+        let label = document.createElement('h1');
+        label.setAttribute("id", "projectLabel");
+        label.innerText = projectName;
 
-        window.onclick = function(event) {
-            if (event.target == modal) {
-            modal.style.display = "none";
-            }}
+        taskContainer.appendChild(label);
 
-        addButton.onclick = function() {
-            const taskName = document.getElementById("taskName").value;
-            const taskDate = document.getElementById("taskDate").value;
+        const addTaskButton = createAddTaskButton();
 
-            if (taskName.trim() === "") {
-                alert("Task name is required.");
-                return;
-            }
+        if (projectName=='Today' || projectName=='This Week'){
+            addTaskButton.style.display = 'none';
+        } else {
+            addTaskButton.style.display = 'inline-block';
         
-            let newTask = new ListItem(taskName,taskDate);
+            const modal = document.getElementById("myModal1");
+            const span = document.getElementsByClassName("close1")[0];
+            const addButton = document.getElementById("add1");
+            const cancelButton = document.getElementById("cancel1");
+
+            addTaskButton.onclick = function() {
+            modal.style.display = "block";
+            }
+
+            span.onclick = function() {
+            modal.style.display = "none";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                modal.style.display = "none";
+                }}
+
+            addButton.onclick = function() {
+                const taskName = document.getElementById("taskName").value;
+                const taskDate = document.getElementById("taskDate").value;
+
+                if (taskName.trim() === "") {
+                    alert("Task name is required.");
+                    return;
+                }
             
-            addSavedTask(projectName, newTask);
-            displayProjectTasks(projectName);
-        
+                let newTask = new ListItem(taskName,taskDate);
+                
+                addSavedTask(projectName, newTask);
+                displayProjectTasks(projectName);
+            
+                modal.style.display = "none";
+                }
+
+            cancelButton.onclick = function() {
             modal.style.display = "none";
-            }
+                }
 
-        cancelButton.onclick = function() {
-        modal.style.display = "none";
-            }
+            taskContainer.appendChild(addTaskButton);
+        }
 
-        taskContainer.appendChild(addTaskButton);
+        tasks.forEach((task) => {
+            const button = createTask(task, projectName);
+            taskContainer.appendChild(button);
+
+        });
+    }
     }
 
-    tasks.forEach((task) => {
-        const button = createTask(task, projectName);
-        taskContainer.appendChild(button);
+    function displayProjects() {
 
-    });
-}
+        let projects = getToDoList().getProjects();
+        const projectContainer = document.getElementById('project-container');
+        projectContainer.innerHTML = '';
 
-function displayProjects() {
-
-    let projects = getToDoList().getProjects();
-    const projectContainer = document.getElementById('project-container');
-    projectContainer.innerHTML = '';
-
-    const homeButton = document.getElementById("button-home-projects");
-    homeButton.addEventListener('click', function() {
-        displayProjectTasks('Home');
-    })
-
-    const todayButton = document.getElementById("button-today-projects");
-    todayButton.addEventListener('click', function() {
-        displayProjectTasks('Today');
-    })
-
-    const thisWeekButton = document.getElementById("button-week-projects");
-    thisWeekButton.addEventListener('click', function() {
-        displayProjectTasks('This Week');
-    })
-
-    for (let j = 3; j<projects.length; j++){
-        const projectButton = createProject(projects[j].getName());
-        projectContainer.appendChild(projectButton);
-        projectButton.classList.add('project-button');
-        projectButton.addEventListener('click', function() {
-            displayProjectTasks(projects[j].getName());
+        const homeButton = document.getElementById("button-home-projects");
+        homeButton.addEventListener('click', function() {
+            displayProjectTasks('Home');
         })
+
+        const todayButton = document.getElementById("button-today-projects");
+        todayButton.addEventListener('click', function() {
+            displayProjectTasks('Today');
+        })
+
+        const thisWeekButton = document.getElementById("button-week-projects");
+        thisWeekButton.addEventListener('click', function() {
+            displayProjectTasks('This Week');
+        })
+
+        for (let j = 3; j<projects.length; j++){
+            const projectButton = createProject(projects[j].getName());
+            projectContainer.appendChild(projectButton);
+            projectButton.classList.add('project-button');
+            projectButton.addEventListener('click', function() {
+                console.log('aaaaaa bla'); //solve that when i click on span(x) it also clicks on the projectButton and fucks up
+                displayProjectTasks(projects[j].getName());
+            })
     }
 }
 

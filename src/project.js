@@ -30,6 +30,9 @@ class Project {
     deleteTask(taskName){
         this.tasks = this.tasks.filter((task)=> task.name !== taskName);
     }
+    contains(taskName) {
+        return this.tasks.some((task) => task.getName() === taskName);
+      }
 }
 
 export {Project};
