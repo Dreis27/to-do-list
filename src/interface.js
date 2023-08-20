@@ -5,7 +5,7 @@ import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate, deleteSav
 
 const today = new Date();
 const year = today.getFullYear();
-const month = today.getMonth() + 1; // Months are 0-indexed, so add 1
+const month = today.getMonth() + 1;
 const day = today.getDate();
 
 const formattedToday = `${year}-0${month}-${day}`;
@@ -42,6 +42,20 @@ function createTask(ListItem, projectName) {
 
     let btn = document.createElement("div");
     btn.classList.add("task-button");
+
+    const icon = document.createElement('i');
+    icon.classList.add('fa-regular', 'fa-square');
+
+    icon.addEventListener('click', function(event){
+        event.stopPropagation();
+        if (icon.classList.contains('fa-regular')){
+            icon.classList = [];
+            icon.classList.add('far', 'fa-check-square');
+        } else {
+            icon.classList = [];
+            icon.classList.add('fa-regular', 'fa-square');
+        }
+    })
 
     let nameDiv = document.createElement("div");
     nameDiv.classList.add("task-name");
@@ -81,6 +95,7 @@ function createTask(ListItem, projectName) {
 
     dateDiv.appendChild(dateBtn);
     
+    btn.appendChild(icon);
     btn.appendChild(nameDiv);
     btn.appendChild(dateDiv);
     btn.appendChild(span);
@@ -151,16 +166,17 @@ function createProject(projectName) {
     span.classList.add('left');
     span.innerHTML = '&times;';
 
-    span.addEventListener('click', function(){
+    span.addEventListener('click', function(event){
+        event.stopPropagation();
         const array = getToDoList().getProject(projectName).getTasks();
-        for(let i = 0; i < array.length; i++) {
-            if(getToDoList().getProject('Today').contains(array[i].getName())){
-                deleteSavedTask('Today', array[i].getName());
+        array.forEach(task => {
+            if(getToDoList().getProject('Today').contains(task.getName())){
+                deleteSavedTask('Today', task.getName());
             }
-            if(getToDoList().getProject('This Week').contains(array[i].getName())){
-                deleteSavedTask('This Week', array[i].getName());
+            if(getToDoList().getProject('This Week').contains(task.getName())){
+                deleteSavedTask('This Week', task.getName());
             }
-        }
+        });
         deleteSavedProject(projectName);
         displayProjects();
     })
@@ -274,7 +290,6 @@ function displayProjectTasks(projectName) {
             projectContainer.appendChild(projectButton);
             projectButton.classList.add('project-button');
             projectButton.addEventListener('click', function() {
-                console.log('aaaaaa bla'); //solve that when i click on span(x) it also clicks on the projectButton and fucks up
                 displayProjectTasks(projects[j].getName());
             })
     }
