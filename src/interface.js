@@ -45,6 +45,7 @@ function createTask(ListItem, projectName) {
 
     const icon = document.createElement('i');
     icon.classList.add('fa-regular', 'fa-square');
+    icon.style.fontSize = '24px';
 
     icon.addEventListener('click', function(event){
         event.stopPropagation();
@@ -125,7 +126,6 @@ function createTask(ListItem, projectName) {
                     deleteSavedTask('Today', text);
                 }
                 if(isDateInThisWeek(newDate)){
-                    console.log('ye');
                     deleteSavedTask('This Week', text);
                     addSavedTask('This Week', getToDoList().getProject(projectName).getTask(text));
                 } else {
@@ -299,7 +299,7 @@ function manageAddProjectButton(){
 
     const modal = document.getElementById("myModal");
     const btn = document.getElementById("button-add-project");
-    const span = document.getElementsByClassName("close")[0];
+    const span = document.getElementById("close2");
     const addButton = document.getElementById("add");
     const cancelButton = document.getElementById("cancel");
 
@@ -308,13 +308,11 @@ function manageAddProjectButton(){
     }
 
     span.onclick = function() {
+        console.log('ok');
     modal.style.display = "none";
     }
-    span.addEventListener('click', function() {
-        modal.style.display = "none";
-        })
 
-    window.onclick = function(event) {
+    document.onclick = function(event) {
         if (event.target == modal) {
         modal.style.display = "none";
         }}

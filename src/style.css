@@ -1,6 +1,15 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css");
 
-
+@font-face {
+  font-family: 'MyFont';
+  src: url('./dirty-font.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+header > div {
+  font-family: 'MyFont';
+  font-size: 80px;
+}
 :root {
   --main-color: #c5e8ff;
 }
@@ -21,7 +30,7 @@ header {
     color: white;
     display: flex;
     justify-content: left;
-    padding-left: 5vw;
+    padding-left: 2vw;
     align-items: center;
     height: 10vh;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -103,6 +112,10 @@ footer {
 .dateBtn{
   background-color: transparent;
   border: none;
+}
+
+#projectLabel {
+  border-bottom: 3px solid #000000;
 }
 
 .default-projects, #project-container{
@@ -242,6 +255,13 @@ footer {
 
   .left{
     margin-left: auto;
+  }
+
+  .fa-github{
+    transition: transform 0.3s ease-in-out;
+  }
+  .fa-github:hover {
+    transform: rotate(360deg) scale(1.2); 
   }
 
 
