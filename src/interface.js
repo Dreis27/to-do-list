@@ -10,13 +10,13 @@ const day = today.getDate();
 
 const formattedToday = `${year}-0${month}-${day}`;
 
-function isDateInThisWeek(date) {
+function isDateInThisWeek(date) { //fix this function fr wtf
     const [givenYear, givenMonth, givenDay] = date.split('-').map(Number);
 
       // Calculate the day of the week where Monday is 0 and Sunday is 6
     const todayDayOfWeek = (today.getDay() + 6) % 7;
  
-    const firstDayOfWeek = new Date(year, month - 1, day - todayDayOfWeek + 1);
+    const firstDayOfWeek = new Date(year, month - 1, day - todayDayOfWeek);
 
     // Calculate the last day of the week (Sunday)
     const lastDayOfWeek = new Date(year, month - 1, day + (6 - todayDayOfWeek));
@@ -77,6 +77,7 @@ function createTask(ListItem, projectName) {
     const dateBtn = document.createElement('button');
     if (projectName=='Today' || projectName=='This Week'){
         dateBtn.disabled = true;
+        span.style.display = 'none';
     }
     
     dateDiv.classList.add("task-date");
