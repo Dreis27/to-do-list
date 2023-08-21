@@ -4,9 +4,9 @@ import { ListItem } from "./list-item";
 class List {
     constructor(){
         this.projects = [];
-        this.projects.push(new Project('Home'));
         this.projects.push(new Project('Today'));
         this.projects.push(new Project('This Week'));
+        this.projects.push(new Project('Home'));
     }
 
     getProjects(){

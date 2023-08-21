@@ -336,4 +336,35 @@ function manageAddProjectButton(){
     modal.style.display = "none";
     }
 }
-export {displayProjectTasks, displayProjects, manageAddProjectButton};
+
+function checkTodayThisWeek(){
+    const today = getToDoList().getProject('Today').getTasks();
+    const thisWeek = getToDoList().getProject('This Week').getTasks();
+    const projects = getToDoList().getProjects();
+
+    today.forEach(task=>{
+        if(task.getDate()!== formattedToday){
+            deleteSavedTask('Today', task.getName());
+        }
+    });
+
+    thisWeek.forEach(task=>{
+        if(!isDateInThisWeek(task.getDate())){
+            deleteSavedTask('This Week', task.getName());
+        }
+    });
+
+    for(let i = 2; i<projects.length; i++){
+        let projectTasks = projects[i].getTasks();
+        projectTasks.forEach(task=>{
+            if(task.getDate() == formattedToday){
+                addSavedTask('Today', task);
+            }
+            if(isDateInThisWeek(task.getDate())){
+                addSavedTask('This Week', task);
+            }
+        })
+
+    }
+}
+export {displayProjectTasks, displayProjects, manageAddProjectButton, checkTodayThisWeek};
