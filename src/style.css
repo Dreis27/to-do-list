@@ -165,6 +165,7 @@ footer {
     border-radius: 8px;
   }
   .add-task-button{
+    width: 102.5%;
     font-size: 20px;
   }
   .button-add-project:hover, .add-task-button:hover {
