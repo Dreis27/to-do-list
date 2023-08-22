@@ -1,6 +1,6 @@
 import { ListItem } from "./list-item";
 import { Project } from "./project";
-import { List } from "./list";
+import { List, DoneList } from "./list";
 
 function saveList(data) {
     localStorage.setItem('myData', JSON.stringify(data));
@@ -52,4 +52,50 @@ function setSavedTaskDate(projectName, taskName, newDate){
     saveList(list);
 }
 
-export{saveList, getToDoList, addSavedProject, deleteSavedProject, addSavedTask, deleteSavedTask, renameSavedTask, setSavedTaskDate};
+//DoneList
+
+function saveDoneList(data) {
+    localStorage.setItem('DoneList', JSON.stringify(data));
+}
+
+function getDoneList(){
+    const list = Object.assign(new DoneList(), JSON.parse(localStorage.getItem('DoneList')));
+
+    list.setProjects(list.getProjects().map((project)=> Object.assign(new Project(), project)));
+
+    list.getProjects().forEach((project)=> project.setTasks(project.getTasks().map((task)=> Object.assign(new ListItem(), task))));
+
+    return list;
+}
+
+function addSavedDoneProject(project){
+    const list = getDoneList();
+    list.addProject(project);
+    saveDoneList(list);
+}
+function deleteSavedDoneProject(projectName){
+    const list = getDoneList();
+    list.deleteProject(projectName);
+    saveDoneList(list);
+}
+
+function addSavedDoneTask(projectName, task){
+    const list = getDoneList();
+    list.getProject(projectName).addTask(task);
+    saveDoneList(list);
+} 
+
+function deleteSavedDoneTask(projectName, taskName){
+    const list = getDoneList();
+    list.getProject(projectName).deleteTask(taskName);
+    saveDoneList(list);
+} 
+
+function renameSavedDoneTask(projectName, taskName, newName){
+    const list = getDoneList();
+    list.getProject(projectName).getTask(taskName).setName(newName);
+    saveDoneList(list);
+} 
+
+export{saveList, getToDoList, addSavedProject, deleteSavedProject, addSavedTask, deleteSavedTask, renameSavedTask, setSavedTaskDate,
+        saveDoneList, getDoneList, addSavedDoneProject, deleteSavedDoneProject, addSavedDoneTask, deleteSavedDoneTask, renameSavedDoneTask};

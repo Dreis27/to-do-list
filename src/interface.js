@@ -1,7 +1,10 @@
 import { ListItem } from "./list-item";
 import { Project } from "./project";
 import { List } from "./list";
-import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate, deleteSavedTask, deleteSavedProject } from "./storage";
+import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate, deleteSavedTask, deleteSavedProject, deleteSavedDoneProject, addSavedDoneTask,
+        deleteSavedDoneTask, 
+        addSavedDoneProject,
+        getDoneList} from "./storage";
 
 const today = new Date();
 const year = today.getFullYear();
@@ -49,13 +52,11 @@ function createTask(ListItem, projectName) {
 
     icon.addEventListener('click', function(event){
         event.stopPropagation();
-        if (icon.classList.contains('fa-regular')){
             icon.classList = [];
             icon.classList.add('far', 'fa-check-square');
-        } else {
-            icon.classList = [];
-            icon.classList.add('fa-regular', 'fa-square');
-        }
+            addSavedDoneTask(projectName, ListItem);
+            deleteSavedTask(projectName, text);
+            displayProjectTasks(projectName);
     })
 
     let nameDiv = document.createElement("div");
@@ -179,6 +180,7 @@ function createProject(projectName) {
             }
         });
         deleteSavedProject(projectName);
+        deleteSavedDoneProject(projectName);
         displayProjects();
     })
 
@@ -194,7 +196,10 @@ function createProject(projectName) {
 function displayProjectTasks(projectName) {
 
     const project = getToDoList().getProject(projectName)
+    const projectDone = getDoneList().getProject(projectName);
+
     const taskContainer = document.getElementById('task-container');
+
     if(project== undefined){
         taskContainer.innerHTML = '';
     } else {
@@ -263,11 +268,29 @@ function displayProjectTasks(projectName) {
 
         });
     }
+
+    const containerDone = document.getElementById('done-container');
+
+    if(projectDone== undefined){
+        containerDone.innerHTML = '';
+        console.log('project undefined');
+    } else {
+        console.log('project should work');
+        const tasksDone = projectDone.getTasks();
+        containerDone.innerHTML = '';
+
+        tasksDone.forEach((task) => {
+            const button = createDoneTask(task, projectName);
+            containerDone.appendChild(button);
+
+        });
+    }
     }
 
     function displayProjects() {
 
         let projects = getToDoList().getProjects();
+        let projectsDone = getDoneList().getProjects();
         const projectContainer = document.getElementById('project-container');
         projectContainer.innerHTML = '';
 
@@ -328,6 +351,7 @@ function manageAddProjectButton(){
 
     let newProject = new Project(projectName);
     addSavedProject(newProject);
+    addSavedDoneProject(newProject);
     displayProjects();
 
     modal.style.display = "none";
@@ -367,5 +391,45 @@ function checkTodayThisWeek(){
         })
 
     }
+}
+
+function createDoneTask(ListItem, projectName) {
+
+    let text = ListItem.getName();
+
+    let btn = document.createElement("div");
+    btn.classList.add("task-button");
+
+    const icon = document.createElement('i');
+    icon.classList.add('far', 'fa-check-square');
+    icon.style.fontSize = '24px';
+
+    icon.addEventListener('click', function(event){
+        event.stopPropagation();
+            icon.classList = [];
+            icon.classList.add('fa-regular', 'fa-square');
+            addSavedTask(projectName, ListItem);
+            deleteSavedDoneTask(projectName, text);
+            displayProjectTasks(projectName);
+    })
+
+    let nameDiv = document.createElement("div");
+    nameDiv.classList.add("task-name");
+    nameDiv.innerText = text;
+
+    const span = document.createElement('span');
+    span.classList.add('close');
+    span.innerHTML = '&times;';
+
+    span.addEventListener('click', function(){
+        deleteSavedDoneTask(projectName, text);
+        displayProjectTasks(projectName);
+    })
+
+    btn.appendChild(icon);
+    btn.appendChild(nameDiv);
+    btn.appendChild(span);
+
+    return btn;
 }
 export {displayProjectTasks, displayProjects, manageAddProjectButton, checkTodayThisWeek};

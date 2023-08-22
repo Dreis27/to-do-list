@@ -51,7 +51,7 @@ header {
     overflow: scroll;
 }
 
-#task-container {
+#page-container {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -60,6 +60,14 @@ header {
     padding-top: 20px;
     padding-left: min(300px, 15%);
     padding-right: min(300px, 15%);
+}
+
+#task-container,
+#done-container {
+  box-sizing: border-box;
+  flex-grow: 1;
+  margin: 10px; /* Add some spacing between the containers */
+
 }
 
 footer {
