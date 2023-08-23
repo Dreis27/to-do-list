@@ -64,8 +64,9 @@ header {
 
 #task-container,
 #done-container {
+  min-height: 0;
+  height: auto;
   box-sizing: border-box;
-  flex-grow: 1;
   margin: 10px; /* Add some spacing between the containers */
 
 }
@@ -100,6 +101,20 @@ footer {
     margin-bottom: 10px;
     align-items: center;
     border-radius: 5px;
+}
+
+.task-done-button {
+  text-decoration: line-through;
+  display: flex;
+  justify-content: space-between; /* This ensures the name is on the left and the date is on the right */
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  align-items: center;
+  border-radius: 5px;
+  background-color: #c7c7c738;
+  color: #b4b4b4;
 }
 
 .task-name {

@@ -398,7 +398,7 @@ function createDoneTask(ListItem, projectName) {
     let text = ListItem.getName();
 
     let btn = document.createElement("div");
-    btn.classList.add("task-button");
+    btn.classList.add("task-done-button");
 
     const icon = document.createElement('i');
     icon.classList.add('far', 'fa-check-square');
