@@ -13,7 +13,7 @@ const day = today.getDate();
 
 const formattedToday = `${year}-0${month}-${day}`;
 
-function isDateInThisWeek(date) { //fix this function fr wtf
+function isDateInThisWeek(date) { 
     const [givenYear, givenMonth, givenDay] = date.split('-').map(Number);
 
       // Calculate the day of the week where Monday is 0 and Sunday is 6

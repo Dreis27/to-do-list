@@ -2,6 +2,7 @@ class ListItem {
     constructor(name, dueDate){
         this.name = name;
         this.dueDate = dueDate;
+        this.completed = false;
     }
 
     getName(){
@@ -15,6 +16,12 @@ class ListItem {
     }
     setDate(dueDate){
         this.dueDate=dueDate;
+    }
+    getCompleted(){
+        return this.completed;
+    }
+    setCompleted(trueOrFalse){
+        this.completed = trueOrFalse;
     }
 }
 
