@@ -1,11 +1,7 @@
 import { ListItem } from "./list-item";
 import { Project } from "./project";
 import { List } from "./list";
-import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate, deleteSavedTask, deleteSavedProject, deleteSavedDoneProject, addSavedDoneTask,
-        deleteSavedDoneTask, 
-        addSavedDoneProject,
-        getDoneList,
-        setSavedTaskCompleted} from "./storage";
+import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate, deleteSavedTask, deleteSavedProject, setSavedTaskCompleted} from "./storage";
 
 const today = new Date();
 const year = today.getFullYear();
@@ -55,8 +51,6 @@ function createTask(ListItem, projectName) {
             setSavedTaskCompleted(projectName, text, true);
             icon.classList = [];
             icon.classList.add('far', 'fa-check-square');
-            addSavedDoneTask(projectName, ListItem);
-            deleteSavedTask(projectName, text);
             displayProjectTasks(projectName);
     })
 
@@ -181,7 +175,6 @@ function createProject(projectName) {
             }
         });
         deleteSavedProject(projectName);
-        deleteSavedDoneProject(projectName);
         displayProjects();
     })
 
@@ -197,16 +190,18 @@ function createProject(projectName) {
 function displayProjectTasks(projectName) {
 
     const project = getToDoList().getProject(projectName)
-    const projectDone = getDoneList().getProject(projectName);
 
+    const containerDone = document.getElementById('done-container');
     const taskContainer = document.getElementById('task-container');
 
     if(project== undefined){
         taskContainer.innerHTML = '';
+        containerDone.innerHTML = '';
     } else {
         const tasks = project.getTasks();
 
         taskContainer.innerHTML = '';
+        containerDone.innerHTML = '';
 
         let label = document.createElement('h1');
         label.setAttribute("id", "projectLabel");
@@ -264,25 +259,14 @@ function displayProjectTasks(projectName) {
         }
 
         tasks.forEach((task) => {
+            if (!task.getCompleted()){
             const button = createTask(task, projectName);
             taskContainer.appendChild(button);
-
-        });
-    }
-
-    const containerDone = document.getElementById('done-container');
-
-    if(projectDone== undefined){
-        containerDone.innerHTML = '';
-        console.log('project undefined');
-    } else {
-        console.log('project should work');
-        const tasksDone = projectDone.getTasks();
-        containerDone.innerHTML = '';
-
-        tasksDone.forEach((task) => {
-            const button = createDoneTask(task, projectName);
-            containerDone.appendChild(button);
+            } 
+            else if (task.getCompleted()){
+                const button = createDoneTask(task, projectName);
+                containerDone.appendChild(button);
+            }
 
         });
     }
@@ -291,7 +275,7 @@ function displayProjectTasks(projectName) {
     function displayProjects() {
 
         let projects = getToDoList().getProjects();
-        let projectsDone = getDoneList().getProjects();
+  
         const projectContainer = document.getElementById('project-container');
         projectContainer.innerHTML = '';
 
@@ -352,7 +336,6 @@ function manageAddProjectButton(){
 
     let newProject = new Project(projectName);
     addSavedProject(newProject);
-    addSavedDoneProject(newProject);
     displayProjects();
 
     modal.style.display = "none";
@@ -410,8 +393,6 @@ function createDoneTask(ListItem, projectName) {
             setSavedTaskCompleted(projectName, text, false);
             icon.classList = [];
             icon.classList.add('fa-regular', 'fa-square');
-            addSavedTask(projectName, ListItem);
-            deleteSavedDoneTask(projectName, text);
             displayProjectTasks(projectName);
     })
 
@@ -424,7 +405,7 @@ function createDoneTask(ListItem, projectName) {
     span.innerHTML = '&times;';
 
     span.addEventListener('click', function(){
-        deleteSavedDoneTask(projectName, text);
+        deleteSavedTask(projectName, text);
         displayProjectTasks(projectName);
     })
 
