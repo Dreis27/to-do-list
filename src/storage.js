@@ -52,6 +52,12 @@ function setSavedTaskDate(projectName, taskName, newDate){
     saveList(list);
 }
 
+function setSavedTaskCompleted(projectName, taskName, status){
+    const list = getToDoList();
+    list.getProject(projectName).getTask(taskName).setCompleted(status);
+    saveList(list);
+}
+
 //DoneList
 
 function saveDoneList(data) {
@@ -97,5 +103,5 @@ function renameSavedDoneTask(projectName, taskName, newName){
     saveDoneList(list);
 } 
 
-export{saveList, getToDoList, addSavedProject, deleteSavedProject, addSavedTask, deleteSavedTask, renameSavedTask, setSavedTaskDate,
+export{saveList, getToDoList, addSavedProject, deleteSavedProject, addSavedTask, deleteSavedTask, renameSavedTask, setSavedTaskDate, setSavedTaskCompleted,
         saveDoneList, getDoneList, addSavedDoneProject, deleteSavedDoneProject, addSavedDoneTask, deleteSavedDoneTask, renameSavedDoneTask};

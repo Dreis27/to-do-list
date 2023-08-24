@@ -4,7 +4,8 @@ import { List } from "./list";
 import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate, deleteSavedTask, deleteSavedProject, deleteSavedDoneProject, addSavedDoneTask,
         deleteSavedDoneTask, 
         addSavedDoneProject,
-        getDoneList} from "./storage";
+        getDoneList,
+        setSavedTaskCompleted} from "./storage";
 
 const today = new Date();
 const year = today.getFullYear();
@@ -42,7 +43,6 @@ function createTask(ListItem, projectName) {
     let text = ListItem.getName();
     let date = getToDoList().getProject(projectName).getTask(text).getDate();
 
-
     let btn = document.createElement("div");
     btn.classList.add("task-button");
 
@@ -52,6 +52,7 @@ function createTask(ListItem, projectName) {
 
     icon.addEventListener('click', function(event){
         event.stopPropagation();
+            setSavedTaskCompleted(projectName, text, true);
             icon.classList = [];
             icon.classList.add('far', 'fa-check-square');
             addSavedDoneTask(projectName, ListItem);
@@ -406,6 +407,7 @@ function createDoneTask(ListItem, projectName) {
 
     icon.addEventListener('click', function(event){
         event.stopPropagation();
+            setSavedTaskCompleted(projectName, text, false);
             icon.classList = [];
             icon.classList.add('fa-regular', 'fa-square');
             addSavedTask(projectName, ListItem);
