@@ -1,7 +1,7 @@
 import { ListItem } from "./list-item";
 import { Project } from "./project";
 import { List } from "./list";
-import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate, deleteSavedTask, deleteSavedProject, setSavedTaskCompleted} from "./storage";
+import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate, deleteSavedTask, deleteSavedProject,setSavedTaskCompleted} from "./storage";
 
 const today = new Date();
 const year = today.getFullYear();
@@ -51,6 +51,13 @@ function createTask(ListItem, projectName) {
             setSavedTaskCompleted(projectName, text, true);
             icon.classList = [];
             icon.classList.add('far', 'fa-check-square');
+            if(getToDoList().getProject('Today').contains(text)){
+                setSavedTaskCompleted('Today', text, true);
+                setSavedTaskCompleted('This Week', text, true);
+            } 
+            else if(getToDoList().getProject('This Week').contains(text)){
+                setSavedTaskCompleted('This Week', text, true);
+            }
             displayProjectTasks(projectName);
     })
 
@@ -393,6 +400,13 @@ function createDoneTask(ListItem, projectName) {
             setSavedTaskCompleted(projectName, text, false);
             icon.classList = [];
             icon.classList.add('fa-regular', 'fa-square');
+            if(getToDoList().getProject('Today').contains(text)){
+                setSavedTaskCompleted('Today', text, false);
+                setSavedTaskCompleted('This Week', text, false);
+            } 
+            else if(getToDoList().getProject('This Week').contains(text)){
+                setSavedTaskCompleted('This Week', text, false);
+            }
             displayProjectTasks(projectName);
     })
 
@@ -406,6 +420,8 @@ function createDoneTask(ListItem, projectName) {
 
     span.addEventListener('click', function(){
         deleteSavedTask(projectName, text);
+        deleteSavedTask('Today', text);
+        deleteSavedTask('This Week', text);
         displayProjectTasks(projectName);
     })
 
