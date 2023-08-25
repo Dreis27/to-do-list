@@ -182,6 +182,10 @@ function createProject(projectName) {
             }
         });
         deleteSavedProject(projectName);
+        if(document.getElementById('projectLabel') != null){
+        if(document.getElementById('projectLabel').textContent == projectName){
+            displayProjectTasks(projectName);
+        }}
         displayProjects();
     })
 
