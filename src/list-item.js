@@ -3,6 +3,7 @@ class ListItem {
         this.name = name;
         this.dueDate = dueDate;
         this.completed = false;
+        this.name2 = '';
     }
 
     getName(){
@@ -22,6 +23,12 @@ class ListItem {
     }
     setCompleted(trueOrFalse){
         this.completed = trueOrFalse;
+    }
+    getName2(){
+        return this.name2;
+    }
+    setName2(name2){
+        this.name2 = name2;
     }
 }
 

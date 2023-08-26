@@ -1,7 +1,7 @@
 import { ListItem } from "./list-item";
 import { Project } from "./project";
 import { List } from "./list";
-import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate, deleteSavedTask, deleteSavedProject,setSavedTaskCompleted} from "./storage";
+import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate, deleteSavedTask, deleteSavedProject,setSavedTaskCompleted, setSavedTaskName2} from "./storage";
 
 const today = new Date();
 const year = today.getFullYear();
@@ -63,7 +63,11 @@ function createTask(ListItem, projectName) {
 
     let nameDiv = document.createElement("div");
     nameDiv.classList.add("task-name");
-    nameDiv.innerText = text;
+    if(projectName == 'Today' || projectName == 'This Week'){
+        nameDiv.innerText = getToDoList().getProject(projectName).getTask(text).getName2();
+    } else {
+        nameDiv.innerText = text;
+    }
 
     const span = document.createElement('span');
     span.classList.add('close');
@@ -182,10 +186,12 @@ function createProject(projectName) {
             }
         });
         deleteSavedProject(projectName);
-        if(document.getElementById('projectLabel') != null){
-        if(document.getElementById('projectLabel').textContent == projectName){
-            displayProjectTasks(projectName);
-        }}
+        if(document.getElementById('projectLabel') != null){ // important bug fix, try to optimize it in the future
+            if(document.getElementById('projectLabel').textContent == projectName){
+                displayProjectTasks(projectName);
+            }
+        }
+
         displayProjects();
     })
 
@@ -257,6 +263,7 @@ function displayProjectTasks(projectName) {
                 let newTask = new ListItem(taskName,taskDate);
                 
                 addSavedTask(projectName, newTask);
+                setSavedTaskName2(projectName, taskName, `${taskName} (${projectName})`);
                 displayProjectTasks(projectName);
             
                 modal.style.display = "none";
@@ -376,6 +383,7 @@ function checkTodayThisWeek(){
 
     for(let i = 2; i<projects.length; i++){
         let projectTasks = projects[i].getTasks();
+        let projectName = projects[i].getName();
         projectTasks.forEach(task=>{
             if(task.getDate() == formattedToday){
                 addSavedTask('Today', task);
@@ -416,7 +424,11 @@ function createDoneTask(ListItem, projectName) {
 
     let nameDiv = document.createElement("div");
     nameDiv.classList.add("task-name");
-    nameDiv.innerText = text;
+    if(projectName == 'Today' || projectName == 'This Week'){
+        nameDiv.innerText = getToDoList().getProject(projectName).getTask(text).getName2();
+    } else {
+        nameDiv.innerText = text;
+    }
 
     const span = document.createElement('span');
     span.classList.add('close');
