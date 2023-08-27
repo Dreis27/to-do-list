@@ -64,7 +64,8 @@ function createTask(ListItem, projectName) {
     let nameDiv = document.createElement("div");
     nameDiv.classList.add("task-name");
     if(projectName == 'Today' || projectName == 'This Week'){
-        nameDiv.innerText = getToDoList().getProject(projectName).getTask(text).getName2();
+        let originProjectName = ListItem.getName2();
+        nameDiv.innerText = `${text} (${originProjectName})`;
     } else {
         nameDiv.innerText = text;
     }
@@ -95,10 +96,14 @@ function createTask(ListItem, projectName) {
     } else {
         dateBtn.innerHTML = `${date}`;
         if(date==formattedToday){
+            if(!getToDoList().getProject('Today').contains2(ListItem.getName(), ListItem.getName2())){
             addSavedTask('Today', ListItem);
+            }
         }
         if(isDateInThisWeek(date)){
+            if(!getToDoList().getProject('This Week').contains2(ListItem.getName(), ListItem.getName2())){
             addSavedTask('This Week', ListItem);
+            }
         }
     }
 
@@ -260,10 +265,9 @@ function displayProjectTasks(projectName) {
                     return;
                 }
             
-                let newTask = new ListItem(taskName,taskDate);
+                let newTask = new ListItem(taskName,taskDate,projectName);
                 
                 addSavedTask(projectName, newTask);
-                setSavedTaskName2(projectName, taskName, `${taskName} (${projectName})`);
                 displayProjectTasks(projectName);
             
                 modal.style.display = "none";
@@ -425,7 +429,8 @@ function createDoneTask(ListItem, projectName) {
     let nameDiv = document.createElement("div");
     nameDiv.classList.add("task-name");
     if(projectName == 'Today' || projectName == 'This Week'){
-        nameDiv.innerText = getToDoList().getProject(projectName).getTask(text).getName2();
+        let originProjectName = ListItem.getName2();
+        nameDiv.innerText = `${text} (${originProjectName})`;
     } else {
         nameDiv.innerText = text;
     }

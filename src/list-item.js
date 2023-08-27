@@ -1,9 +1,9 @@
 class ListItem {
-    constructor(name, dueDate){
+    constructor(name, dueDate, originProjectName){
         this.name = name;
         this.dueDate = dueDate;
         this.completed = false;
-        this.name2 = '';
+        this.name2 = originProjectName;
     }
 
     getName(){
