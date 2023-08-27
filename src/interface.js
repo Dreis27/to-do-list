@@ -37,6 +37,7 @@ function createAddTaskButton() {
 function createTask(ListItem, projectName) {
 
     let text = ListItem.getName();
+    let text2 = ListItem.getName2();
     let date = getToDoList().getProject(projectName).getTask(text).getDate();
 
     let btn = document.createElement("div");
@@ -48,15 +49,15 @@ function createTask(ListItem, projectName) {
 
     icon.addEventListener('click', function(event){
         event.stopPropagation();
-            setSavedTaskCompleted(projectName, text, true);
+            setSavedTaskCompleted(projectName, text, text2, true);
             icon.classList = [];
             icon.classList.add('far', 'fa-check-square');
-            if(getToDoList().getProject('Today').contains(text)){
-                setSavedTaskCompleted('Today', text, true);
-                setSavedTaskCompleted('This Week', text, true);
+            if(getToDoList().getProject('Today').contains(text, text2)){
+                setSavedTaskCompleted('Today', text, text2, true);
+                setSavedTaskCompleted('This Week', text, text2, true);
             } 
-            else if(getToDoList().getProject('This Week').contains(text)){
-                setSavedTaskCompleted('This Week', text, true);
+            else if(getToDoList().getProject('This Week').contains(text, text2)){
+                setSavedTaskCompleted('This Week', text, text2, true);
             }
             displayProjectTasks(projectName);
     })
@@ -183,10 +184,10 @@ function createProject(projectName) {
         event.stopPropagation();
         const array = getToDoList().getProject(projectName).getTasks();
         array.forEach(task => {
-            if(getToDoList().getProject('Today').contains(task.getName())){
+            if(getToDoList().getProject('Today').contains(task.getName(), task.getName2())){
                 deleteSavedTask('Today', task.getName());
             }
-            if(getToDoList().getProject('This Week').contains(task.getName())){
+            if(getToDoList().getProject('This Week').contains(task.getName(), task.getName2())){
                 deleteSavedTask('This Week', task.getName());
             }
         });
@@ -413,6 +414,7 @@ function checkTodayThisWeek(){
 function createDoneTask(ListItem, projectName) {
 
     let text = ListItem.getName();
+    let text2 = ListItem.getName2();
 
     let btn = document.createElement("div");
     btn.classList.add("task-done-button");
@@ -423,15 +425,15 @@ function createDoneTask(ListItem, projectName) {
 
     icon.addEventListener('click', function(event){
         event.stopPropagation();
-            setSavedTaskCompleted(projectName, text, false);
+            setSavedTaskCompleted(projectName, text, text2, false);
             icon.classList = [];
             icon.classList.add('fa-regular', 'fa-square');
-            if(getToDoList().getProject('Today').contains(text)){
-                setSavedTaskCompleted('Today', text, false);
-                setSavedTaskCompleted('This Week', text, false);
+            if(getToDoList().getProject('Today').contains(text, text2)){
+                setSavedTaskCompleted('Today', text, text2, false);
+                setSavedTaskCompleted('This Week', text, text2, false);
             } 
-            else if(getToDoList().getProject('This Week').contains(text)){
-                setSavedTaskCompleted('This Week', text, false);
+            else if(getToDoList().getProject('This Week').contains(text, text2)){
+                setSavedTaskCompleted('This Week', text, text2, false);
             }
             displayProjectTasks(projectName);
     })

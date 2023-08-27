@@ -52,9 +52,9 @@ function setSavedTaskDate(projectName, taskName, newDate){
     saveList(list);
 }
 
-function setSavedTaskCompleted(projectName, taskName, status){
+function setSavedTaskCompleted(projectName, taskName, name2, status){
     const list = getToDoList();
-    list.getProject(projectName).getTask(taskName).setCompleted(status);
+    list.getProject(projectName).getTaskPrecise(taskName, name2).setCompleted(status);
     saveList(list);
 }
 

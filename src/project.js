@@ -15,6 +15,9 @@ class Project {
     getTask(taskName){
         return this.tasks.find((task)=> task.getName() === taskName);
     }
+    getTaskPrecise(taskName, name2){
+        return this.tasks.find((task)=> task.getName()===taskName && task.getName2() === name2);
+    }
 
     setName(name){
         this.name = name;
@@ -40,8 +43,8 @@ class Project {
     deleteTask(taskName){
         this.tasks = this.tasks.filter((task)=> task.name !== taskName);
     }
-    contains(taskName) {
-        return this.tasks.some((task) => task.getName() === taskName);
+    contains(taskName, name2) {
+        return this.tasks.some((task) => task.getName() === taskName && task.getName2() === name2);
       }
 
     //contains2(taskName, name2){
