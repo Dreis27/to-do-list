@@ -96,14 +96,14 @@ function createTask(ListItem, projectName) {
     } else {
         dateBtn.innerHTML = `${date}`;
         if(date==formattedToday){
-            if(!getToDoList().getProject('Today').contains2(ListItem.getName(), ListItem.getName2())){
+            //if(!getToDoList().getProject('Today').contains2(ListItem.getName(), ListItem.getName2())){
             addSavedTask('Today', ListItem);
-            }
+            //}
         }
         if(isDateInThisWeek(date)){
-            if(!getToDoList().getProject('This Week').contains2(ListItem.getName(), ListItem.getName2())){
+            //if(!getToDoList().getProject('This Week').contains2(ListItem.getName(), ListItem.getName2())){
             addSavedTask('This Week', ListItem);
-            }
+            //}
         }
     }
 
@@ -369,34 +369,44 @@ function manageAddProjectButton(){
 }
 
 function checkTodayThisWeek(){
-    const today = getToDoList().getProject('Today').getTasks();
-    const thisWeek = getToDoList().getProject('This Week').getTasks();
-    const projects = getToDoList().getProjects();
 
-    today.forEach(task=>{
-        if(task.getDate()!== formattedToday){
-            deleteSavedTask('Today', task.getName());
-        }
-    });
+    const lastRefreshDate = localStorage.getItem('lastRefreshDate');
+    const currentDate = new Date().toLocaleDateString();
 
-    thisWeek.forEach(task=>{
-        if(!isDateInThisWeek(task.getDate())){
-            deleteSavedTask('This Week', task.getName());
-        }
-    });
+    if (lastRefreshDate !== currentDate) {
+        // Update last refresh date in localStorage
+        localStorage.setItem('lastRefreshDate', currentDate);
 
-    for(let i = 2; i<projects.length; i++){
-        let projectTasks = projects[i].getTasks();
-        let projectName = projects[i].getName();
-        projectTasks.forEach(task=>{
-            if(task.getDate() == formattedToday){
-                addSavedTask('Today', task);
+        const today = getToDoList().getProject('Today').getTasks();
+        const thisWeek = getToDoList().getProject('This Week').getTasks();
+        const projects = getToDoList().getProjects();
+        
+
+        today.forEach(task=>{
+            if(task.getDate()!== formattedToday){
+                deleteSavedTask('Today', task.getName());
             }
-            if(isDateInThisWeek(task.getDate())){
-                addSavedTask('This Week', task);
-            }
-        })
+        });
 
+        thisWeek.forEach(task=>{
+            if(!isDateInThisWeek(task.getDate())){
+                deleteSavedTask('This Week', task.getName());
+            }
+        });
+
+        for(let i = 2; i<projects.length; i++){
+            let projectTasks = projects[i].getTasks();
+            let projectName = projects[i].getName();
+            projectTasks.forEach(task=>{
+                if(task.getDate() == formattedToday){
+                    addSavedTask('Today', task);
+                }
+                if(isDateInThisWeek(task.getDate())){
+                    addSavedTask('This Week', task);
+                }
+            })
+
+        }
     }
 }
 
