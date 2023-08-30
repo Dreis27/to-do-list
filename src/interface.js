@@ -49,7 +49,7 @@ function createTask(ListItem, projectName) {
 
     icon.addEventListener('click', function(event){
         event.stopPropagation();
-            setSavedTaskCompleted(projectName, text, text2, true);
+            setSavedTaskCompleted(text2, text, text2, true);
             icon.classList = [];
             icon.classList.add('far', 'fa-check-square');
             if(getToDoList().getProject('Today').contains(text, text2)){
@@ -76,7 +76,7 @@ function createTask(ListItem, projectName) {
     span.innerHTML = '&times;';
 
     span.addEventListener('click', function(){
-        deleteSavedTask(projectName, text);
+        deleteSavedTask(text2, text);
         deleteSavedTask('Today', text);
         deleteSavedTask('This Week', text);
         displayProjectTasks(projectName);
@@ -425,7 +425,7 @@ function createDoneTask(ListItem, projectName) {
 
     icon.addEventListener('click', function(event){
         event.stopPropagation();
-            setSavedTaskCompleted(projectName, text, text2, false);
+            setSavedTaskCompleted(text2, text, text2, false);
             icon.classList = [];
             icon.classList.add('fa-regular', 'fa-square');
             if(getToDoList().getProject('Today').contains(text, text2)){
@@ -452,7 +452,7 @@ function createDoneTask(ListItem, projectName) {
     span.innerHTML = '&times;';
 
     span.addEventListener('click', function(){
-        deleteSavedTask(projectName, text);
+        deleteSavedTask(text2, text); //text2 in this case is ListItem.getName2(), so it's just a project name
         deleteSavedTask('Today', text);
         deleteSavedTask('This Week', text);
         displayProjectTasks(projectName);
