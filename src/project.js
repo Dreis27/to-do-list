@@ -40,8 +40,8 @@ class Project {
         this.tasks.push(newTask)
     }
 
-    deleteTask(taskName){
-        this.tasks = this.tasks.filter((task)=> task.name !== taskName);
+    deleteTask(taskName, name2){
+        this.tasks = this.tasks.filter((task)=> task.name !== taskName || task.getName2() !== name2);
     }
     contains(taskName, name2) {
         return this.tasks.some((task) => task.getName() === taskName && task.getName2() === name2);

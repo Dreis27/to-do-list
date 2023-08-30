@@ -34,9 +34,9 @@ function addSavedTask(projectName, task){
     saveList(list);
 } 
 
-function deleteSavedTask(projectName, taskName){
+function deleteSavedTask(projectName, taskName, name2){
     const list = getToDoList();
-    list.getProject(projectName).deleteTask(taskName);
+    list.getProject(projectName).deleteTask(taskName, name2);
     saveList(list);
 } 
 

@@ -76,9 +76,9 @@ function createTask(ListItem, projectName) {
     span.innerHTML = '&times;';
 
     span.addEventListener('click', function(){
-        deleteSavedTask(text2, text);
-        deleteSavedTask('Today', text);
-        deleteSavedTask('This Week', text);
+        deleteSavedTask(text2, text, text2);
+        deleteSavedTask('Today', text, text2);
+        deleteSavedTask('This Week', text, text2);
         displayProjectTasks(projectName);
     })
 
@@ -134,16 +134,16 @@ function createTask(ListItem, projectName) {
                 dateBtn.innerHTML = `${newDate}` || 'No date';
 
                 if(newDate==formattedToday){ // here must also check whether project already contains the task!!!!!!!!!!!!!!!!!!!!
-                    deleteSavedTask('Today', text);
+                    deleteSavedTask('Today', text, text2);
                     addSavedTask('Today', getToDoList().getProject(projectName).getTask(text));
                 } else {
-                    deleteSavedTask('Today', text);
+                    deleteSavedTask('Today', text, text2);
                 }
                 if(isDateInThisWeek(newDate)){
-                    deleteSavedTask('This Week', text);
+                    deleteSavedTask('This Week', text, text2);
                     addSavedTask('This Week', getToDoList().getProject(projectName).getTask(text));
                 } else {
-                    deleteSavedTask('This Week', text);
+                    deleteSavedTask('This Week', text, text2);
                 }
                 dateBtn.style.display = 'inline-block';
             });
@@ -185,10 +185,10 @@ function createProject(projectName) {
         const array = getToDoList().getProject(projectName).getTasks();
         array.forEach(task => {
             if(getToDoList().getProject('Today').contains(task.getName(), task.getName2())){
-                deleteSavedTask('Today', task.getName());
+                deleteSavedTask('Today', task.getName(), task.getName2());
             }
             if(getToDoList().getProject('This Week').contains(task.getName(), task.getName2())){
-                deleteSavedTask('This Week', task.getName());
+                deleteSavedTask('This Week', task.getName(), task.getName2());
             }
         });
         deleteSavedProject(projectName);
@@ -385,13 +385,13 @@ function checkTodayThisWeek(){
 
         today.forEach(task=>{
             if(task.getDate()!== formattedToday){
-                deleteSavedTask('Today', task.getName());
+                deleteSavedTask('Today', task.getName(), task.getName2());
             }
         });
 
         thisWeek.forEach(task=>{
             if(!isDateInThisWeek(task.getDate())){
-                deleteSavedTask('This Week', task.getName());
+                deleteSavedTask('This Week', task.getName(), task.getName2());
             }
         });
 
@@ -452,9 +452,9 @@ function createDoneTask(ListItem, projectName) {
     span.innerHTML = '&times;';
 
     span.addEventListener('click', function(){
-        deleteSavedTask(text2, text); //text2 in this case is ListItem.getName2(), so it's just a project name
-        deleteSavedTask('Today', text);
-        deleteSavedTask('This Week', text);
+        deleteSavedTask(text2, text, text2); //text2 in this case is ListItem.getName2(), so it's just a project name
+        deleteSavedTask('Today', text, text2);
+        deleteSavedTask('This Week', text, text2);
         displayProjectTasks(projectName);
     })
 
