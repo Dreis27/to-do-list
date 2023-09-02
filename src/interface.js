@@ -7,8 +7,14 @@ const today = new Date();
 const year = today.getFullYear();
 const month = today.getMonth() + 1;
 const day = today.getDate();
+const dayReal = checkDay();
 
-const formattedToday = `${year}-0${month}-${day}`;
+function checkDay() {
+    if(day>9) return day;
+    else return `0${day}`;
+}
+
+const formattedToday = `${year}-0${month}-${dayReal}`;
 
 function isDateInThisWeek(date) { 
     const [givenYear, givenMonth, givenDay] = date.split('-').map(Number);
@@ -272,6 +278,9 @@ function displayProjectTasks(projectName) {
                 displayProjectTasks(projectName);
             
                 modal.style.display = "none";
+
+                document.getElementById("taskName").value = ''; //reset the form
+                document.getElementById("taskDate").value = '';
                 }
 
             cancelButton.onclick = function() {
@@ -340,7 +349,6 @@ function manageAddProjectButton(){
     }
 
     span.onclick = function() {
-        console.log('ok');
     modal.style.display = "none";
     }
 
@@ -362,6 +370,8 @@ function manageAddProjectButton(){
     displayProjects();
 
     modal.style.display = "none";
+
+    document.getElementById("projectName").value = '';//reset the form
     }
 
     cancelButton.onclick = function() {
