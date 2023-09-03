@@ -85,10 +85,13 @@ footer {
         flex-direction: column;
     }
 
-    #menu-bar, #task-container {
+    #menu-bar, #page-container {
         flex-basis: auto;
         flex-grow: 1;
         width: 100%;
+    }
+    header {
+      width: 100%;
     }
 }
 
