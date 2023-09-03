@@ -7,14 +7,15 @@ const today = new Date();
 const year = today.getFullYear();
 const month = today.getMonth() + 1;
 const day = today.getDate();
-const dayReal = checkDay();
+const dayReal = adjustDateOrMonth(day);
+const monthReal = adjustDateOrMonth(month);
 
-function checkDay() {
-    if(day>9) return day;
-    else return `0${day}`;
+function adjustDateOrMonth(dayOrMonth) {
+    if(dayOrMonth>9) return dayOrMonth;
+    else return `0${dayOrMonth}`;
 }
 
-const formattedToday = `${year}-0${month}-${dayReal}`;
+const formattedToday = `${year}-${monthReal}-${dayReal}`;
 
 function isDateInThisWeek(date) { 
     const [givenYear, givenMonth, givenDay] = date.split('-').map(Number);
