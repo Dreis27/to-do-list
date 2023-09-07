@@ -1,7 +1,7 @@
 import { ListItem } from "./list-item";
 import { Project } from "./project";
 import { List } from "./list";
-import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate, deleteSavedTask, deleteSavedProject,setSavedTaskCompleted, setSavedTaskName2} from "./storage";
+import { getToDoList, addSavedTask, addSavedProject, setSavedTaskDate, deleteSavedTask, deleteSavedProject,setSavedTaskCompleted} from "./storage";
 
 const today = new Date();
 const year = today.getFullYear();
@@ -33,6 +33,18 @@ function isDateInThisWeek(date) {
     return inputDate >= firstDayOfWeek && inputDate <= lastDayOfWeek;
   }
 
+function completeTask(taskName, taskName2){
+
+    setSavedTaskCompleted(taskName2, taskName, taskName2, true);
+    if(getToDoList().getProject('Today').contains(taskName, taskName2)){
+        setSavedTaskCompleted('Today', taskName, taskName2, true);
+        setSavedTaskCompleted('This Week', taskName, taskName2, true);
+    } 
+    else if(getToDoList().getProject('This Week').contains(taskName, taskName2)){
+        setSavedTaskCompleted('This Week', taskName, taskName2, true);
+    }
+}
+
 function createAddTaskButton() {
     const addTaskButton = document.createElement("button");
     addTaskButton.textContent = "+ Add Task";
@@ -54,19 +66,11 @@ function createTask(ListItem, projectName) {
     icon.classList.add('fa-regular', 'fa-square');
     icon.style.fontSize = '24px';
 
-    icon.addEventListener('click', function(event){
-        event.stopPropagation();
-            setSavedTaskCompleted(text2, text, text2, true);
-            icon.classList = [];
-            icon.classList.add('far', 'fa-check-square');
-            if(getToDoList().getProject('Today').contains(text, text2)){
-                setSavedTaskCompleted('Today', text, text2, true);
-                setSavedTaskCompleted('This Week', text, text2, true);
-            } 
-            else if(getToDoList().getProject('This Week').contains(text, text2)){
-                setSavedTaskCompleted('This Week', text, text2, true);
-            }
-            displayProjectTasks(projectName);
+    icon.addEventListener('click', function(){
+        icon.classList = [];
+        icon.classList.add('far', 'fa-check-square');
+        completeTask(text, text2);
+        displayProjectTasks(projectName);
     })
 
     let nameDiv = document.createElement("div");
@@ -104,14 +108,10 @@ function createTask(ListItem, projectName) {
     } else {
         dateBtn.innerHTML = `${date}`;
         if(date==formattedToday){
-            //if(!getToDoList().getProject('Today').contains2(ListItem.getName(), ListItem.getName2())){
             addSavedTask('Today', ListItem);
-            //}
         }
         if(isDateInThisWeek(date)){
-            //if(!getToDoList().getProject('This Week').contains2(ListItem.getName(), ListItem.getName2())){
             addSavedTask('This Week', ListItem);
-            //}
         }
     }
 
@@ -140,7 +140,7 @@ function createTask(ListItem, projectName) {
                 let newDate = getToDoList().getProject(projectName).getTask(text).getDate();
                 dateBtn.innerHTML = `${newDate}` || 'No date';
 
-                if(newDate==formattedToday){ // here must also check whether project already contains the task!!!!!!!!!!!!!!!!!!!!
+                if(newDate==formattedToday){
                     deleteSavedTask('Today', text, text2);
                     addSavedTask('Today', getToDoList().getProject(projectName).getTask(text));
                 } else {
