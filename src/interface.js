@@ -33,6 +33,19 @@ function isDateInThisWeek(date) {
     return inputDate >= firstDayOfWeek && inputDate <= lastDayOfWeek;
   }
 
+function createNameDiv(taskName, projectName, ListItem) {
+    let nameDiv = document.createElement("div");
+    nameDiv.classList.add("task-name");
+    if(projectName == 'Today' || projectName == 'This Week'){
+        let originProjectName = ListItem.getName2();
+        nameDiv.innerText = `${taskName} (${originProjectName})`;
+    } else {
+        nameDiv.innerText = taskName;
+    }
+
+    return nameDiv;
+}
+
 function completeTask(taskName, taskName2){
 
     setSavedTaskCompleted(taskName2, taskName, taskName2, true);
@@ -73,14 +86,7 @@ function createTask(ListItem, projectName) {
         displayProjectTasks(projectName);
     })
 
-    let nameDiv = document.createElement("div");
-    nameDiv.classList.add("task-name");
-    if(projectName == 'Today' || projectName == 'This Week'){
-        let originProjectName = ListItem.getName2();
-        nameDiv.innerText = `${text} (${originProjectName})`;
-    } else {
-        nameDiv.innerText = text;
-    }
+    let nameDiv = createNameDiv(text, projectName, ListItem);
 
     const span = document.createElement('span');
     span.classList.add('close');
